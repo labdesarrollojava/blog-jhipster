@@ -35,5 +35,8 @@
       "es",
       "en"
     ]
+  },
+  "generator-jhipster-multitenancy": {
+    "tenantName": "company"
   }
 }

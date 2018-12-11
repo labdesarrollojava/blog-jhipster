@@ -32,6 +32,7 @@
                 "audits": "Auditorías",
                 "apidocs": "API",
                 "database": "Base de datos",
+                "company-management": "Company Management",
                 "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
             },
             "language": "Idioma"
@@ -134,5 +135,6 @@
         "idexists": "A new {{entityName}} cannot already have an ID",
         "idnull": "Invalid ID"
     },
-    "footer": "pie de página"
+    "footer": "pie de página",
+    "userManagementCompany": "Company"
 }

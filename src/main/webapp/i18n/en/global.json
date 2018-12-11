@@ -32,6 +32,7 @@
                 "audits": "Audits",
                 "apidocs": "API",
                 "database": "Database",
+                "company-management": "Company Management",
                 "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
             },
             "language": "Language"
@@ -135,5 +136,6 @@
         "idexists": "A new {{ entityName }} cannot already have an ID",
         "idnull": "Invalid ID"
     },
-    "footer": "This is your footer"
+    "footer": "This is your footer",
+    "userManagementCompany": "Company"
 }
