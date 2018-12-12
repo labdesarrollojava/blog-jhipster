@@ -18,13 +18,21 @@
             "otherEntityName": "entry",
             "ownerSide": false,
             "otherEntityRelationshipName": "tag"
+        },
+        {
+            "relationshipName": "company",
+            "otherEntityName": "company",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "tag"
         }
     ],
     "changelogDate": "20181204133703",
     "entityTableName": "tag",
     "dto": "no",
     "pagination": "infinite-scroll",
-    "service": "no",
+    "service": "serviceClass",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "",

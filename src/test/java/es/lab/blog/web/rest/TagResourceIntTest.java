@@ -4,6 +4,7 @@ import es.lab.blog.BlogApp;
 
 import es.lab.blog.domain.Tag;
 import es.lab.blog.repository.TagRepository;
+import es.lab.blog.service.TagService;
 import es.lab.blog.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -46,6 +47,9 @@ public class TagResourceIntTest {
     private TagRepository tagRepository;
 
     @Autowired
+    private TagService tagService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -64,7 +68,7 @@ public class TagResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TagResource tagResource = new TagResource(tagRepository);
+        final TagResource tagResource = new TagResource(tagService);
         this.restTagMockMvc = MockMvcBuilders.standaloneSetup(tagResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -184,7 +188,7 @@ public class TagResourceIntTest {
     @Transactional
     public void updateTag() throws Exception {
         // Initialize the database
-        tagRepository.saveAndFlush(tag);
+        tagService.save(tag);
 
         int databaseSizeBeforeUpdate = tagRepository.findAll().size();
 
@@ -229,7 +233,7 @@ public class TagResourceIntTest {
     @Transactional
     public void deleteTag() throws Exception {
         // Initialize the database
-        tagRepository.saveAndFlush(tag);
+        tagService.save(tag);
 
         int databaseSizeBeforeDelete = tagRepository.findAll().size();
 

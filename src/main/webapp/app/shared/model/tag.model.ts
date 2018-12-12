@@ -1,7 +1,9 @@
 import { IEntry } from 'app/shared/model//entry.model';
 
+import { Company } from '../../admin/company-management/company.model';
 export interface ITag {
     id?: number;
+    company?: Company;
     name?: string;
     entries?: IEntry[];
 }

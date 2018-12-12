@@ -1,6 +1,7 @@
 package es.lab.blog.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -35,6 +36,10 @@ public class Tag implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnore
     private Set<Entry> entries = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Company company;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -81,6 +86,19 @@ public class Tag implements Serializable {
 
     public void setEntries(Set<Entry> entries) {
         this.entries = entries;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public Tag company(Company company) {
+        this.company = company;
+        return this;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

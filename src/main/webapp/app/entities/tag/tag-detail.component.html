@@ -9,6 +9,12 @@
                 <dd>
                     <span>{{tag.name}}</span>
                 </dd>
+            <dt><span jhiTranslate="userManagementCompany">Company</span></dt>
+        <dd>
+            <div *ngIf="tag.company">
+                <a [routerLink]="['/admin/company-management', tag.company?.id, 'view']">{{tag.company?.name}}</a>
+            </div>
+        </dd>
             </dl>
 
             <button type="submit"

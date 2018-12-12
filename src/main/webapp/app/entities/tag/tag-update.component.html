@@ -27,6 +27,21 @@
 
             </div>
             <div>
+                <div class="form-group" *ngIf="!currentAccount.company">
+                    <label class="form-control-label" jhiTranslate="userManagementCompany" for="field_company">Company</label>
+                    <select class="form-control" id="field_company" name="company" [(ngModel)]="tag.company"  required>
+                        <option *ngIf="!editForm.value.company" [ngValue]="null" selected></option>
+                        <option [ngValue]="companyOption.id === tag.company?.id ? tag.company : companyOption" *ngFor="let companyOption of companies; trackBy: trackCompanyById">{{companyOption.name}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.company?.dirty && editForm.controls.company?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.company?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>

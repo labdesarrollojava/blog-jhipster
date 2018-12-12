@@ -12,6 +12,7 @@
             "delete": {
                 "question": "Are you sure you want to delete Tag {{ id }}?"
             },
+            "company": "Company",
             "detail": {
                 "title": "Tag"
             },

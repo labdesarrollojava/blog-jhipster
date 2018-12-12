@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Company } from '../../admin/company-management/company.model';
+import { CompanyService } from '../../shared/company/company.service';
+import { Principal } from 'app/core';
 import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
@@ -15,6 +18,8 @@ import { EntryService } from 'app/entities/entry';
 })
 export class TagUpdateComponent implements OnInit {
     tag: ITag;
+    companies: Company[];
+    currentAccount: any;
     isSaving: boolean;
 
     entries: IEntry[];
@@ -23,10 +28,14 @@ export class TagUpdateComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private tagService: TagService,
         private entryService: EntryService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private companyService: CompanyService
     ) {}
 
     ngOnInit() {
+        this.companyService.query().subscribe((res: HttpResponse<Company[]>) => {
+            this.companies = res.body;
+        });
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ tag }) => {
             this.tag = tag;
@@ -45,6 +54,9 @@ export class TagUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        if (this.currentAccount.company) {
+            this.tag.company = this.currentAccount.company;
+        }
         if (this.tag.id !== undefined) {
             this.subscribeToSaveResponse(this.tagService.update(this.tag));
         } else {
