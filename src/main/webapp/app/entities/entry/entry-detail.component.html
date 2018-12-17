@@ -29,6 +29,12 @@
                         <a [routerLink]="['/tag', tag?.id, 'view' ]">{{tag.name}}</a>{{last ? '' : ', '}}
                     </span>
                 </dd>
+            <dt><span jhiTranslate="userManagementCompany">Company</span></dt>
+        <dd>
+            <div *ngIf="entry.company">
+                <a [routerLink]="['/admin/company-management', entry.company?.id, 'view']">{{entry.company?.name}}</a>
+            </div>
+        </dd>
             </dl>
 
             <button type="submit"

@@ -2,7 +2,7 @@ package es.lab.blog.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import es.lab.blog.domain.Entry;
-import es.lab.blog.repository.EntryRepository;
+import es.lab.blog.service.EntryService;
 import es.lab.blog.web.rest.errors.BadRequestAlertException;
 import es.lab.blog.web.rest.util.HeaderUtil;
 import es.lab.blog.web.rest.util.PaginationUtil;
@@ -34,10 +34,10 @@ public class EntryResource {
 
     private static final String ENTITY_NAME = "entry";
 
-    private final EntryRepository entryRepository;
+    private final EntryService entryService;
 
-    public EntryResource(EntryRepository entryRepository) {
-        this.entryRepository = entryRepository;
+    public EntryResource(EntryService entryService) {
+        this.entryService = entryService;
     }
 
     /**
@@ -54,7 +54,7 @@ public class EntryResource {
         if (entry.getId() != null) {
             throw new BadRequestAlertException("A new entry cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Entry result = entryRepository.save(entry);
+        Entry result = entryService.save(entry);
         return ResponseEntity.created(new URI("/api/entries/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -76,7 +76,7 @@ public class EntryResource {
         if (entry.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Entry result = entryRepository.save(entry);
+        Entry result = entryService.save(entry);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, entry.getId().toString()))
             .body(result);
@@ -95,9 +95,9 @@ public class EntryResource {
         log.debug("REST request to get a page of Entries");
         Page<Entry> page;
         if (eagerload) {
-            page = entryRepository.findAllWithEagerRelationships(pageable);
+            page = entryService.findAllWithEagerRelationships(pageable);
         } else {
-            page = entryRepository.findAll(pageable);
+            page = entryService.findAll(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/entries?eagerload=%b", eagerload));
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -113,7 +113,7 @@ public class EntryResource {
     @Timed
     public ResponseEntity<Entry> getEntry(@PathVariable Long id) {
         log.debug("REST request to get Entry : {}", id);
-        Optional<Entry> entry = entryRepository.findOneWithEagerRelationships(id);
+        Optional<Entry> entry = entryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(entry);
     }
 
@@ -127,8 +127,7 @@ public class EntryResource {
     @Timed
     public ResponseEntity<Void> deleteEntry(@PathVariable Long id) {
         log.debug("REST request to delete Entry : {}", id);
-
-        entryRepository.deleteById(id);
+        entryService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

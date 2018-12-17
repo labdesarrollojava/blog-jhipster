@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Company } from '../../admin/company-management/company.model';
+import { CompanyService } from '../../shared/company/company.service';
+import { Principal } from 'app/core';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
@@ -19,6 +22,8 @@ import { TagService } from 'app/entities/tag';
 })
 export class EntryUpdateComponent implements OnInit {
     entry: IEntry;
+    companies: Company[];
+    currentAccount: any;
     isSaving: boolean;
 
     blogs: IBlog[];
@@ -32,10 +37,18 @@ export class EntryUpdateComponent implements OnInit {
         private entryService: EntryService,
         private blogService: BlogService,
         private tagService: TagService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private companyService: CompanyService,
+        private principal: Principal
     ) {}
 
     ngOnInit() {
+        this.principal.identity().then(account => {
+            this.currentAccount = account;
+        });
+        this.companyService.query().subscribe((res: HttpResponse<Company[]>) => {
+            this.companies = res.body;
+        });
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ entry }) => {
             this.entry = entry;
@@ -74,6 +87,9 @@ export class EntryUpdateComponent implements OnInit {
     save() {
         this.isSaving = true;
         this.entry.date = this.date != null ? moment(this.date, DATE_TIME_FORMAT) : null;
+        if (this.currentAccount.company) {
+            this.entry.company = this.currentAccount.company;
+        }
         if (this.entry.id !== undefined) {
             this.subscribeToSaveResponse(this.entryService.update(this.entry));
         } else {

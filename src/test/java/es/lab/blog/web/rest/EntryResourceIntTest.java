@@ -4,6 +4,7 @@ import es.lab.blog.BlogApp;
 
 import es.lab.blog.domain.Entry;
 import es.lab.blog.repository.EntryRepository;
+import es.lab.blog.service.EntryService;
 import es.lab.blog.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -62,6 +63,12 @@ public class EntryResourceIntTest {
     @Mock
     private EntryRepository entryRepositoryMock;
 
+    @Mock
+    private EntryService entryServiceMock;
+
+    @Autowired
+    private EntryService entryService;
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -81,7 +88,7 @@ public class EntryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final EntryResource entryResource = new EntryResource(entryRepository);
+        final EntryResource entryResource = new EntryResource(entryService);
         this.restEntryMockMvc = MockMvcBuilders.standaloneSetup(entryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -201,8 +208,8 @@ public class EntryResourceIntTest {
     
     @SuppressWarnings({"unchecked"})
     public void getAllEntriesWithEagerRelationshipsIsEnabled() throws Exception {
-        EntryResource entryResource = new EntryResource(entryRepositoryMock);
-        when(entryRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        EntryResource entryResource = new EntryResource(entryServiceMock);
+        when(entryServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restEntryMockMvc = MockMvcBuilders.standaloneSetup(entryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -213,13 +220,13 @@ public class EntryResourceIntTest {
         restEntryMockMvc.perform(get("/api/entries?eagerload=true"))
         .andExpect(status().isOk());
 
-        verify(entryRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(entryServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({"unchecked"})
     public void getAllEntriesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        EntryResource entryResource = new EntryResource(entryRepositoryMock);
-            when(entryRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        EntryResource entryResource = new EntryResource(entryServiceMock);
+            when(entryServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
             MockMvc restEntryMockMvc = MockMvcBuilders.standaloneSetup(entryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -229,7 +236,7 @@ public class EntryResourceIntTest {
         restEntryMockMvc.perform(get("/api/entries?eagerload=true"))
         .andExpect(status().isOk());
 
-            verify(entryRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+            verify(entryServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -260,7 +267,7 @@ public class EntryResourceIntTest {
     @Transactional
     public void updateEntry() throws Exception {
         // Initialize the database
-        entryRepository.saveAndFlush(entry);
+        entryService.save(entry);
 
         int databaseSizeBeforeUpdate = entryRepository.findAll().size();
 
@@ -309,7 +316,7 @@ public class EntryResourceIntTest {
     @Transactional
     public void deleteEntry() throws Exception {
         // Initialize the database
-        entryRepository.saveAndFlush(entry);
+        entryService.save(entry);
 
         int databaseSizeBeforeDelete = entryRepository.findAll().size();
 

@@ -12,6 +12,7 @@
             "delete": {
                 "question": "¿Seguro que quiere eliminar Entry {{ id }}?"
             },
+            "company": "Company",
             "detail": {
                 "title": "Entry"
             },

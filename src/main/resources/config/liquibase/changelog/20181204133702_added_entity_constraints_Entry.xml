@@ -25,5 +25,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="tag"/>
         
+        <addForeignKeyConstraint baseColumnNames="company_id"
+                                 baseTableName="entry"
+                                 constraintName="fk_entry_company_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="company"/>
+
     </changeSet>
 </databaseChangeLog>
