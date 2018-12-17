@@ -29,10 +29,14 @@ export class TagUpdateComponent implements OnInit {
         private tagService: TagService,
         private entryService: EntryService,
         private activatedRoute: ActivatedRoute,
-        private companyService: CompanyService
+        private companyService: CompanyService,
+        private principal: Principal
     ) {}
 
     ngOnInit() {
+        this.principal.identity().then(account => {
+            this.currentAccount = account;
+        });
         this.companyService.query().subscribe((res: HttpResponse<Company[]>) => {
             this.companies = res.body;
         });
