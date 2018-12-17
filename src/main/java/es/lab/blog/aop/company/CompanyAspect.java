@@ -37,7 +37,7 @@ public class CompanyAspect {
      * Filter users based on which company the user is associated with.
      * Skip filter if user has no company
      */
-    @Before("execution(* es.lab.blog.service.UserService.*(..)) || execution(* es.lab.blog.service.TagService.*(..))")
+    @Before("execution(* es.lab.blog.service.UserService.*(..)) || execution(* es.lab.blog.service.TagService.*(..)) || execution(* es.lab.blog.service.BlogService.*(..))")
     public void beforeExecution() throws Throwable {
         Optional<String> login = SecurityUtils.getCurrentUserLogin();
 

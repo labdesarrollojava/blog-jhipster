@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Company } from '../../admin/company-management/company.model';
+import { CompanyService } from '../../shared/company/company.service';
+import { Principal } from 'app/core';
 import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
@@ -14,6 +17,8 @@ import { IUser, UserService } from 'app/core';
 })
 export class BlogUpdateComponent implements OnInit {
     blog: IBlog;
+    companies: Company[];
+    currentAccount: any;
     isSaving: boolean;
 
     users: IUser[];
@@ -22,10 +27,18 @@ export class BlogUpdateComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private blogService: BlogService,
         private userService: UserService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private companyService: CompanyService,
+        private principal: Principal
     ) {}
 
     ngOnInit() {
+        this.principal.identity().then(account => {
+            this.currentAccount = account;
+        });
+        this.companyService.query().subscribe((res: HttpResponse<Company[]>) => {
+            this.companies = res.body;
+        });
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ blog }) => {
             this.blog = blog;
@@ -44,6 +57,9 @@ export class BlogUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        if (this.currentAccount.company) {
+            this.blog.company = this.currentAccount.company;
+        }
         if (this.blog.id !== undefined) {
             this.subscribeToSaveResponse(this.blogService.update(this.blog));
         } else {

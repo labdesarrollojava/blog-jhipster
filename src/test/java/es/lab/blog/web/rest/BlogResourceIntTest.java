@@ -4,6 +4,7 @@ import es.lab.blog.BlogApp;
 
 import es.lab.blog.domain.Blog;
 import es.lab.blog.repository.BlogRepository;
+import es.lab.blog.service.BlogService;
 import es.lab.blog.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -49,6 +50,9 @@ public class BlogResourceIntTest {
     private BlogRepository blogRepository;
 
     @Autowired
+    private BlogService blogService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -67,7 +71,7 @@ public class BlogResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final BlogResource blogResource = new BlogResource(blogRepository);
+        final BlogResource blogResource = new BlogResource(blogService);
         this.restBlogMockMvc = MockMvcBuilders.standaloneSetup(blogResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -209,7 +213,7 @@ public class BlogResourceIntTest {
     @Transactional
     public void updateBlog() throws Exception {
         // Initialize the database
-        blogRepository.saveAndFlush(blog);
+        blogService.save(blog);
 
         int databaseSizeBeforeUpdate = blogRepository.findAll().size();
 
@@ -256,7 +260,7 @@ public class BlogResourceIntTest {
     @Transactional
     public void deleteBlog() throws Exception {
         // Initialize the database
-        blogRepository.saveAndFlush(blog);
+        blogService.save(blog);
 
         int databaseSizeBeforeDelete = blogRepository.findAll().size();
 

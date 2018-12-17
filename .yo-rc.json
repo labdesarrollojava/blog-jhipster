@@ -39,7 +39,8 @@
   "generator-jhipster-multitenancy": {
     "tenantName": "company",
     "tenantisedEntities": [
-      "tag"
+      "tag",
+      "blog"
     ]
   }
 }

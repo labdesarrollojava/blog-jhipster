@@ -17,6 +17,12 @@
                 <dd>
                     {{blog.user?.login}}
                 </dd>
+            <dt><span jhiTranslate="userManagementCompany">Company</span></dt>
+        <dd>
+            <div *ngIf="blog.company">
+                <a [routerLink]="['/admin/company-management', blog.company?.id, 'view']">{{blog.company?.name}}</a>
+            </div>
+        </dd>
             </dl>
 
             <button type="submit"

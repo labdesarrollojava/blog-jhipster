@@ -2,7 +2,7 @@ package es.lab.blog.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import es.lab.blog.domain.Blog;
-import es.lab.blog.repository.BlogRepository;
+import es.lab.blog.service.BlogService;
 import es.lab.blog.web.rest.errors.BadRequestAlertException;
 import es.lab.blog.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -29,10 +29,10 @@ public class BlogResource {
 
     private static final String ENTITY_NAME = "blog";
 
-    private final BlogRepository blogRepository;
+    private final BlogService blogService;
 
-    public BlogResource(BlogRepository blogRepository) {
-        this.blogRepository = blogRepository;
+    public BlogResource(BlogService blogService) {
+        this.blogService = blogService;
     }
 
     /**
@@ -49,7 +49,7 @@ public class BlogResource {
         if (blog.getId() != null) {
             throw new BadRequestAlertException("A new blog cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Blog result = blogRepository.save(blog);
+        Blog result = blogService.save(blog);
         return ResponseEntity.created(new URI("/api/blogs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -71,7 +71,7 @@ public class BlogResource {
         if (blog.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Blog result = blogRepository.save(blog);
+        Blog result = blogService.save(blog);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, blog.getId().toString()))
             .body(result);
@@ -86,7 +86,7 @@ public class BlogResource {
     @Timed
     public List<Blog> getAllBlogs() {
         log.debug("REST request to get all Blogs");
-        return blogRepository.findAll();
+        return blogService.findAll();
     }
 
     /**
@@ -99,7 +99,7 @@ public class BlogResource {
     @Timed
     public ResponseEntity<Blog> getBlog(@PathVariable Long id) {
         log.debug("REST request to get Blog : {}", id);
-        Optional<Blog> blog = blogRepository.findById(id);
+        Optional<Blog> blog = blogService.findOne(id);
         return ResponseUtil.wrapOrNotFound(blog);
     }
 
@@ -113,8 +113,7 @@ public class BlogResource {
     @Timed
     public ResponseEntity<Void> deleteBlog(@PathVariable Long id) {
         log.debug("REST request to delete Blog : {}", id);
-
-        blogRepository.deleteById(id);
+        blogService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

@@ -26,13 +26,21 @@
             "relationshipName": "user",
             "otherEntityName": "user",
             "otherEntityField": "login"
+        },
+        {
+            "relationshipName": "company",
+            "otherEntityName": "company",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "blog"
         }
     ],
     "changelogDate": "20181204133701",
     "entityTableName": "blog",
     "dto": "no",
     "pagination": "no",
-    "service": "no",
+    "service": "serviceClass",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "",
